@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Advance Counting</string>
+    <string name="count_text">Count</string>
 </resources>
