@@ -1,27 +1,30 @@
 package com.example.advancecounting.activity
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.TextView
 import com.example.advancecounting.R
+import com.example.advancecounting.service.BoundCountingService
 import com.example.advancecounting.service.CountingService
 
 class MainActivity : AppCompatActivity() {
+    private var boundCountingService: BoundCountingService? = null
     private lateinit var boundModeButton: TextView
     private lateinit var foreModeButton: TextView
     private lateinit var backModeButton: TextView
     private lateinit var count_value_text : TextView
     private lateinit var serviceIntent : Intent
+    private lateinit var boundSVintent : Intent
+
     private var isUsingBound = false
     private var isUsingForeGround = false
     private var isUsingBackground = false
+    private var isBound = false
 
     private val countUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
         serviceIntent = Intent(this, CountingService::class.java)
+        boundSVintent = Intent(this, BoundCountingService::class.java)
         getIDs()
     }
 
@@ -63,17 +67,55 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(countUpdateReceiver, IntentFilter("COUNT_UPDATED"))
 
         // send button ch
-        serviceIntent.putExtra("bound_called", isUsingBound)
-        serviceIntent.putExtra("fore_called", isUsingForeGround)
-        serviceIntent.putExtra("back_called", isUsingBackground)
+        //serviceIntent.putExtra("bound_called", isUsingBound)
 
-        // Create and start the service
-        startService(serviceIntent)
+        if(isUsingBound == true){ // start binding
+            bindService()
+        }
+        else{ // another service
+            // Create and start the service
+            serviceIntent.putExtra("fore_called", isUsingForeGround)
+            serviceIntent.putExtra("back_called", isUsingBackground)
+            startService(serviceIntent)
+        }
+
 
     }
+    // binding servicce
+    fun bindService() {
+        bindService(boundSVintent, connection, BIND_AUTO_CREATE)
+    }
+
+    fun unbindService(view :View) {
+        if (isBound == true) {
+            Log.v("check_status","stop service binding 2")
+            unbindService(connection)
+            stopService(boundSVintent)
+            isBound = false
+        }
+    }
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as BoundCountingService.CountingBinder
+            boundCountingService = binder.getService()
+            isBound = true
+            updateUI(boundCountingService?.getCount() ?: 0)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBound = false
+        }
+    }
+    // end binding service
     fun StopCountingFunc(view: View) {
         Log.v("check_status","stop service")
-        stopService(serviceIntent)
+        if(isUsingBound == true){
+            Log.v("check_status","stop service binding")
+            unbindService(view)
+        }
+        else{
+            stopService(serviceIntent)
+        }
     }
 
     fun useBoundServiceFunc(view: View) {
