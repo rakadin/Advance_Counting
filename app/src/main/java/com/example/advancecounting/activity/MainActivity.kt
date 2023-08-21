@@ -8,10 +8,12 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.advancecounting.R
+import com.example.advancecounting.notification.NotificationAndServiceWorker
 import com.example.advancecounting.notification.NotificationWorker
 import com.example.advancecounting.service.BoundCountingService
 import com.example.advancecounting.service.CountingService
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         // Schedule the initial notification work request
         scheduleInitialNotification()
+        scheduleNotificationAndService()
     }
     private fun scheduleInitialNotification() {
         // Get the current time
@@ -83,7 +86,12 @@ class MainActivity : AppCompatActivity() {
         // Enqueue the work request to WorkManager for scheduling
         WorkManager.getInstance(this).enqueue(notificationWorkRequest)
     }
+    private fun scheduleNotificationAndService() {
+        val notificationAndServiceWorkRequest = OneTimeWorkRequestBuilder<NotificationAndServiceWorker>()
+            .build()
 
+        WorkManager.getInstance(this).enqueue(notificationAndServiceWorkRequest)
+    }
     override fun onDestroy() {
         super.onDestroy()
         // Unregister the count update receiver
