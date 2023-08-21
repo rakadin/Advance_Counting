@@ -30,19 +30,12 @@ class CountingService : Service() {
             }
             else{
                 // increment the count value
-                Log.v("check_status","update count before")
+                Log.v("check_status","update count before $count")
                 count++ //100
-                Log.v("check_status","update count after")
+                Log.v("check_status","update count after $count")
                 Log.v("check_status_but","check but: $isForeCheck")
                 Log.v("check_status_but","check but: $isBackCheck")
-//            if(isBoundCheck == true){ // use bound service
-//                Log.v("check_status","check but: $isBoundCheck")
-//
-//                // send Broadcast to update the UI
-//                val intent = Intent("COUNT_UPDATED")
-//                intent.putExtra("count", count)
-//                sendBroadcast(intent)
-//            }
+
                 if(isForeCheck == true){ // use foreground service
                     Log.v("check_status_but","check but: $isForeCheck")
                     val notificationBuilder = NotificationBuilder(applicationContext)
@@ -58,11 +51,13 @@ class CountingService : Service() {
                 }
                 else if(isBackCheck == true){// use background service
                     Log.v("check_status","check but: $isBackCheck")
+                    val notificationBuilder = NotificationBuilder(applicationContext)
+                    notificationBuilder.createNotificationWithSoundThatOpenTheApp("Background running", " Counting running!!!", R.drawable.running)
                     if(count==100){
                         val notificationBuilder = NotificationBuilder(applicationContext)
 
                         // Create a simple notification
-                        notificationBuilder.createSimpleNotification("Background service complete", "$count Counting complete!!!", R.drawable.running)
+                        notificationBuilder.createNotificationWithSoundThatOpenTheApp("Background service complete", "$count Counting complete!!!", R.drawable.running)
                     }
                 }
 
@@ -112,6 +107,7 @@ class CountingService : Service() {
         // If we get killed, after returning from here, restart
         return START_STICKY
     }
+
     override fun onBind(intent: Intent): IBinder? {
         Log.v("check_status","binding in process")
         //("Return the communication channel to the service.")
