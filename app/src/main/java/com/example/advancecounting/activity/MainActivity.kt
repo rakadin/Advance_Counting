@@ -17,6 +17,7 @@ import com.example.advancecounting.notification.NotificationAndServiceWorker
 import com.example.advancecounting.notification.NotificationWorker
 import com.example.advancecounting.service.BoundCountingService
 import com.example.advancecounting.service.CountingService
+import com.example.advancecounting.service.CountingServiceWithCoroutines
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
         serviceIntent = Intent(this, CountingService::class.java)
+
         boundSVintent = Intent(this, BoundCountingService::class.java)
         getIDs()
 
@@ -210,5 +212,13 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Log.v("check_status_activity","start MainActivity")
+    }
+
+    fun StartCountingWithCoroutineFunc(view: View) {
+        Log.v("check_status_coroutine","start with coroutines")
+        // Register the broadcast receiver in onCreate
+        val serviceCoroutinesIntent = Intent(this, CountingServiceWithCoroutines::class.java)
+        registerReceiver(countUpdateReceiver, IntentFilter("COUNT_UPDATED"))
+        startService(serviceCoroutinesIntent)
     }
 }
