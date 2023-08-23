@@ -48,16 +48,36 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/gradient_green_button"
         android:onClick="StartCountingFunc"
-        android:text="Start Counting"
+        android:text="Start Normal"
         android:textColor="@color/white"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintHorizontal_bias="0.119"
+        app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/total_count_in"
         app:layout_constraintVertical_bias="0.002"
-        app:layout_constraintWidth_percent="0.35" />
+        app:layout_constraintWidth_percent="0.25" />
+
+    <Button
+        android:id="@+id/button_start_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/gradient_green_button"
+        android:onClick="StartCountingWithCoroutineFunc"
+        android:text="Start-coroutines"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintHorizontal_bias="0.238"
+        app:layout_constraintStart_toEndOf="@+id/button_start"
+        app:layout_constraintTop_toBottomOf="@+id/total_count_in"
+        app:layout_constraintVertical_bias="0.002"
+        app:layout_constraintWidth_percent="0.25" />
 
     <Button
         android:id="@+id/button_stop"
@@ -68,14 +88,15 @@
         android:onClick="StopCountingFunc"
         android:text="Stop Counting"
         android:textColor="@color/white"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintHorizontal_bias="0.82"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.609"
+        app:layout_constraintStart_toEndOf="@+id/button_start_2"
         app:layout_constraintTop_toBottomOf="@+id/total_count_in"
         app:layout_constraintVertical_bias="0.002"
-        app:layout_constraintWidth_percent="0.35" />
+        app:layout_constraintWidth_percent="0.25" />
 
     <TextView
         android:id="@+id/textView2"
